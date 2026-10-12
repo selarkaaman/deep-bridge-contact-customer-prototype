@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deep Bridge · Outreach tracker</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.hov{cursor:pointer;transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease}
+.hov:focus-visible{outline:3px solid #1D5BD8;outline-offset:2px}
+.side:hover{background:#F3F5F9}
+.chip:hover{background:#F3F6FC}
+.ibtn:hover{background:#F1F4FA;color:#0F172A}
+.addb:hover{background:#2140B8}
+.mitem:hover{background:#F3F6FC}
+.qin{outline:none}
+.qin::placeholder{color:#94A3B8}
+.qbox{transition:border-color .2s ease,box-shadow .2s ease}
+.qbox:focus-within{border-color:#9DB6EE;box-shadow:0 0 0 4px rgba(29,91,216,.10)}
+.glowic{box-shadow:0 0 0 1px #D6E2FB,0 0 16px 2px rgba(29,91,216,.28);animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 1px #D6E2FB,0 0 12px 1px rgba(29,91,216,.22)}50%{box-shadow:0 0 0 1px #C7D7FA,0 0 22px 6px rgba(29,91,216,.38)}}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 0 rgba(22,163,74,.5);animation:live 2s ease-out infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(22,163,74,.45)}70%{box-shadow:0 0 0 7px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+.fade{animation:fade .3s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.pop{animation:pop .18s ease-out both}
+@keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; padding: 28px 36px 36px; font-family: 'Inter', system-ui, sans-serif; color: #0F172A; background: radial-gradient(ellipse 55% 40% at 85% 0%, #FDEBDD 0%, rgba(253,235,221,0) 70%), radial-gradient(ellipse 50% 35% at 50% 62%, #EAF0FD 0%, rgba(234,240,253,0) 70%), #FAF8F6">
+
+  <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+    <button aria-label="Close menu" onClick="{{closeMenu}}" style="position: fixed; inset: 0; z-index: 20; border: 0; background: transparent; cursor: default"></button>
+  </sc-if>
+
+  <div style="max-width: 1180px; margin: 0 auto; display: flex; gap: 14px">
+    <span class="glowic" aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D5BD8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2.5L10.8 13.2M21.5 2.5l-7 19-3.7-8.3-8.3-3.7z"></path></svg>
+    </span>
+    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; flex-direction: column; gap: 4px; padding-top: 6px">
+        <span style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em">{{headline}}</span>
+        <span style="font-size: 14px; color: #64748B">{{subline}}</span>
+      </div>
+
+      <section aria-label="Outreach tracker" style="height: max(560px, calc(100vh - 150px)); display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E8ECF3; border-radius: 16px; box-shadow: 0 24px 60px -36px rgba(15,23,42,.35); overflow: hidden">
+
+        <!-- header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #EEF1F5">
+          <span style="display: flex; align-items: center; gap: 10px; min-width: 0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D5BD8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"></path></svg>
+            <span style="font-size: 17px; font-weight: 700">Outreach tracker</span>
+            <span style="font-size: 13px; color: #64748B; white-space: nowrap">· Juicer customers</span>
+            <span role="status" style="display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 10px; border-radius: 13px; background: {{stateBg}}; font-size: 12.5px; font-weight: 600; color: {{stateC}}">
+              <sc-if value="{{running}}" hint-placeholder-val="{{true}}"><span class="live"></span></sc-if>
+              <sc-if value="{{paused}}" hint-placeholder-val="{{false}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"></path></svg></sc-if>
+              {{stateText}}
+            </span>
+          </span>
+          <span style="position: relative; flex: none; display: flex; align-items: center; gap: 8px">
+            <button class="hov chip" onClick="{{togglePause}}" style="height: 36px; padding: 0 14px; border: 1px solid #E2E8F0; border-radius: 9px; background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 7px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="{{pauseIcon}}"></path></svg>{{pauseLabel}}
+            </button>
+            <button class="hov chip" onClick="{{noop}}" style="height: 36px; padding: 0 14px; border: 1px solid #E2E8F0; border-radius: 9px; background: #FFFFFF; font-family: inherit; font-size: 13.5px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 7px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v15H4zM4 10h16M9 3v4M15 3v4"></path></svg>Edit schedule
+            </button>
+            <button class="hov ibtn" onClick="{{toggleMenu}}" aria-label="More actions" aria-expanded="{{menuExpanded}}" style="width: 36px; height: 36px; border: 1px solid #E2E8F0; border-radius: 9px; background: #FFFFFF; color: #475569; display: flex; align-items: center; justify-content: center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="19" cy="12" r="1.8"></circle></svg>
+            </button>
+            <sc-if value="{{menuOpen}}" hint-placeholder-val="{{false}}">
+              <div class="pop" role="menu" style="position: absolute; top: 44px; right: 0; z-index: 40; width: 230px; padding: 6px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 24px 50px -20px rgba(15,23,42,.35); display: flex; flex-direction: column; gap: 1px">
+                <sc-for list="{{menu}}" as="mi" hint-placeholder-count="4">
+                  <button class="hov mitem" role="menuitem" onClick="{{mi.run}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 8px; background: transparent; font-family: inherit; font-size: 13px; font-weight: 500; color: {{mi.color}}; text-align: left; display: flex; align-items: center; gap: 9px">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{mi.icon}}"></path></svg>{{mi.label}}
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </span>
+        </div>
+
+        <!-- pipeline / filters -->
+        <div role="tablist" aria-label="Filter recipients" style="display: flex; align-items: stretch; gap: 8px; padding: 12px 18px; border-bottom: 1px solid #EEF1F5; overflow-x: auto">
+          <sc-for list="{{stages}}" as="st" hint-placeholder-count="6">
+            <button class="hov chip" role="tab" aria-selected="{{st.on}}" onClick="{{st.pick}}" style="flex: 1 0 auto; min-width: 104px; padding: 8px 12px; border: 1px solid {{st.border}}; border-radius: 10px; background: {{st.bg}}; font-family: inherit; text-align: left; display: flex; flex-direction: column; gap: 2px">
+              <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: {{st.labelC}}"><span style="width: 7px; height: 7px; border-radius: 50%; background: {{st.dot}}"></span>{{st.label}}</span>
+              <span style="font-size: 20px; font-weight: 700; color: #0F172A">{{st.n}}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <!-- body -->
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 340px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr)">
+
+          <!-- list -->
+          <div role="listbox" aria-label="Recipients" style="min-height: 0; overflow-y: auto; border-right: 1px solid #EEF1F5; padding: 8px; display: flex; flex-direction: column; gap: 2px">
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+              <div class="hov side" role="option" aria-selected="{{r.selected}}" onClick="{{r.pick}}" style="display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 10px; background: {{r.bg}}; box-shadow: {{r.ring}}; opacity: {{r.op}}">
+                <span style="flex: none; position: relative">
+                  <span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 7px; background: {{r.logoBg}}; color: #FFFFFF; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.logo}}</span>
+                  <sc-if value="{{r.unread}}" hint-placeholder-val="{{false}}"><span aria-label="New" style="position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; border-radius: 50%; background: #1D5BD8; box-shadow: 0 0 0 2px #FFFFFF"></span></sc-if>
+                </span>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                  <span style="display: flex; align-items: baseline; gap: 8px; min-width: 0">
+                    <span style="flex: 1; min-width: 0; font-size: 13px; font-weight: {{r.weight}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.company}}</span>
+                    <span style="flex: none; font-size: 11.5px; color: #94A3B8">{{r.when}}</span>
+                  </span>
+                  <span style="display: flex; align-items: center; gap: 6px; min-width: 0">
+                    <span style="flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: {{r.stC}}"><span style="width: 6px; height: 6px; border-radius: 50%; background: {{r.stDot}}"></span>{{r.stText}}</span>
+                    <sc-if value="{{r.hasIntent}}" hint-placeholder-val="{{false}}"><span style="min-width: 0; height: 20px; padding: 0 7px; border-radius: 5px; background: {{r.inBg}}; color: {{r.inC}}; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.intent}}</span></sc-if>
+                  </span>
+                </span>
+              </div>
+            </sc-for>
+            <sc-if value="{{noRows}}" hint-placeholder-val="{{false}}"><span style="padding: 24px 12px; font-size: 13px; color: #94A3B8; text-align: center">Nothing here right now.</span></sc-if>
+          </div>
+
+          <!-- detail -->
+          <div style="min-height: 0; min-width: 0; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+              <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                <span style="font-size: 16px; font-weight: 700">{{d.company}}</span>
+                <span style="font-size: 13px; color: #64748B">{{d.people}}</span>
+              </span>
+              <span style="flex: none; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 14px; background: {{d.stBg}}; font-size: 12.5px; font-weight: 600; color: {{d.stC}}"><span style="width: 7px; height: 7px; border-radius: 50%; background: {{d.stDot}}"></span>{{d.stText}}</span>
+            </div>
+
+            <!-- intent -->
+            <sc-if value="{{d.hasReply}}" hint-placeholder-val="{{true}}">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 1px solid #E8ECF3; border-radius: 12px">
+                <span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+                  <span style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: .05em">Intent<span style="text-transform: none; letter-spacing: 0; font-weight: 500; color: #94A3B8">{{d.intentSource}}</span></span>
+                </span>
+                <div role="radiogroup" aria-label="Intent" style="display: flex; flex-wrap: wrap; gap: 6px">
+                  <sc-for list="{{d.intents}}" as="it" hint-placeholder-count="6">
+                    <button class="hov chip" role="radio" aria-checked="{{it.on}}" onClick="{{it.pick}}" style="height: 28px; padding: 0 11px; border: 1px solid {{it.border}}; border-radius: 14px; background: {{it.bg}}; font-family: inherit; font-size: 12.5px; font-weight: 600; color: {{it.c}}">{{it.label}}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- suggested next step -->
+            <sc-if value="{{d.hasNext}}" hint-placeholder-val="{{true}}">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: #F3F7FF; border: 1px solid #DCE6FB">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D5BD8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex: none"><path d="M12 3l2.2 5.5L20 9l-4.5 3.8L17 19l-5-3.2L7 19l1.5-6.2L4 9l5.8-.5z"></path></svg>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                  <span style="font-size: 13.5px; font-weight: 600; color: #0F172A">{{d.nextTitle}}</span>
+                  <span style="font-size: 12.5px; color: #475569">{{d.nextSub}}</span>
+                </span>
+                <button class="hov addb" onClick="{{d.nextRun}}" style="flex: none; height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: #2B4FD8; font-family: inherit; font-size: 13px; font-weight: 600; color: #FFFFFF">{{d.nextLabel}}</button>
+              </div>
+            </sc-if>
+
+            <!-- reply composer -->
+            <sc-if value="{{d.composing}}" hint-placeholder-val="{{false}}">
+              <div class="fade" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid #C9D8F7; border-radius: 12px">
+                <span style="font-size: 12.5px; color: #64748B">Reply to {{d.replyTo}}</span>
+                <label for="tr-reply" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Reply</label>
+                <textarea id="tr-reply" class="qin qbox" value="{{d.draft}}" onChange="{{d.onDraft}}" style="min-height: 130px; resize: vertical; padding: 10px 12px; border: 1px solid #E2E8F0; border-radius: 9px; font-family: inherit; font-size: 13.5px; line-height: 1.55; color: #0F172A"></textarea>
+                <sc-if value="{{d.hasDraftFile}}" hint-placeholder-val="{{false}}"><span style="align-self: flex-start; height: 26px; padding: 0 9px; border-radius: 6px; background: #F1F4F8; font-size: 12px; color: #475569; display: inline-flex; align-items: center; gap: 6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5"></path></svg>{{d.draftFile}}</span></sc-if>
+                <span style="display: flex; justify-content: flex-end; gap: 8px">
+                  <button class="hov chip" onClick="{{d.cancelDraft}}" style="height: 36px; padding: 0 14px; border: 1px solid #E2E8F0; border-radius: 9px; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 500; color: #0F172A">Cancel</button>
+                  <button class="hov addb" onClick="{{d.sendDraft}}" style="height: 36px; padding: 0 16px; border: 0; border-radius: 9px; background: #2B4FD8; font-family: inherit; font-size: 13px; font-weight: 600; color: #FFFFFF">Send reply</button>
+                </span>
+              </div>
+            </sc-if>
+
+            <!-- bounced: fix address -->
+            <sc-if value="{{d.bounced}}" hint-placeholder-val="{{false}}">
+              <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 1px solid #F5D9A8; border-radius: 12px; background: #FFF8EC">
+                <span style="font-size: 13px; font-weight: 600; color: #92400E">The address didn't work: {{d.badEmail}}</span>
+                <span style="display: flex; gap: 8px">
+                  <label for="tr-fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Correct email address</label>
+                  <input id="tr-fix" class="qin qbox" value="{{d.fixVal}}" onChange="{{d.onFix}}" placeholder="Correct email address" style="flex: 1; min-width: 0; height: 36px; box-sizing: border-box; padding: 0 10px; border: 1px solid #E8C995; border-radius: 8px; background: #FFFFFF; font-family: inherit; font-size: 13px; color: #0F172A">
+                  <button class="hov addb" onClick="{{d.resend}}" style="flex: none; height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: #2B4FD8; font-family: inherit; font-size: 13px; font-weight: 600; color: #FFFFFF">Fix and resend</button>
+                </span>
+              </div>
+            </sc-if>
+
+            <!-- timeline -->
+            <div style="display: flex; flex-direction: column">
+              <span style="font-size: 12px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px">Activity</span>
+              <sc-for list="{{d.events}}" as="ev" hint-placeholder-count="4">
+                <div style="display: flex; gap: 12px">
+                  <span style="flex: none; display: flex; flex-direction: column; align-items: center; width: 26px">
+                    <span style="width: 26px; height: 26px; border-radius: 50%; background: {{ev.bg}}; color: {{ev.c}}; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ev.icon}}"></path></svg></span>
+                    <sc-if value="{{ev.line}}" hint-placeholder-val="{{true}}"><span style="flex: 1; width: 2px; min-height: 12px; background: #EEF1F5"></span></sc-if>
+                  </span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 3px 0 14px">
+                    <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+                      <span style="font-size: 13.5px; font-weight: 600; color: #0F172A">{{ev.title}}</span>
+                      <span style="flex: none; font-size: 12px; color: #94A3B8">{{ev.time}}</span>
+                    </span>
+                    <sc-if value="{{ev.hasText}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #475569; line-height: 1.5">{{ev.text}}</span></sc-if>
+                    <sc-if value="{{ev.hasQuote}}" hint-placeholder-val="{{false}}"><span style="padding: 10px 12px; border-left: 3px solid #C9D8F7; border-radius: 0 8px 8px 0; background: #F8FAFE; font-size: 13.5px; line-height: 1.55; color: #1E293B; white-space: pre-wrap">{{ev.quote}}</span></sc-if>
+                    <sc-if value="{{ev.hasFiles}}" hint-placeholder-val="{{false}}">
+                      <span style="display: flex; flex-wrap: wrap; gap: 6px">
+                        <sc-for list="{{ev.files}}" as="fl" hint-placeholder-count="1"><span style="height: 26px; padding: 0 9px; border-radius: 6px; background: #F1F4F8; font-size: 12px; color: #475569; display: inline-flex; align-items: center; gap: 6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5"></path></svg>{{fl}}</span></sc-for>
+                      </span>
+                    </sc-if>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- actions for this email -->
+            <div style="margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; padding-top: 12px; border-top: 1px solid #EEF1F5">
+              <sc-for list="{{d.actions}}" as="ac" hint-placeholder-count="4">
+                <button class="hov chip" onClick="{{ac.run}}" style="height: 34px; padding: 0 12px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 600; color: {{ac.color}}; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ac.icon}}"></path></svg>{{ac.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <!-- footer: automatic rules -->
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 18px; border-top: 1px solid #EEF1F5">
+          <span style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px">
+            <sc-for list="{{rules}}" as="ru" hint-placeholder-count="2">
+              <button class="hov" role="switch" aria-checked="{{ru.on}}" onClick="{{ru.toggle}}" style="display: flex; align-items: center; gap: 8px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 13px; color: #334155">
+                <span style="width: 32px; height: 18px; padding: 2px; box-sizing: border-box; border-radius: 9px; background: {{ru.track}}; display: flex; justify-content: {{ru.justify}}"><span style="width: 14px; height: 14px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 2px rgba(15,23,42,.25)"></span></span>
+                {{ru.label}}
+              </button>
+            </sc-for>
+          </span>
+          <span style="font-size: 12.5px; color: #94A3B8">{{footNote}}</span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'belia', filter: 'all', paused: false, menuOpen: false, rows: this.seed(), rules: { stopReply: true, stopCompany: false, bounce: true }, composing: '', draft: '', fix: {} };
+  }
+
+  seed() {
+    return [
+      { id: 'belia', company: 'Belia Trading', logo: 'B', logoBg: '#2563EB', people: 'To Sandra Benavides · Import Manager', status: 'replied', intent: 'price', auto: 'price', unread: true, when: '11:20',
+        events: [
+          { k: 'sched', title: 'Scheduled', time: 'Fri 9 Oct', text: 'Mon 12 Oct · 9:00 Lima time' },
+          { k: 'sent', title: 'Sent', time: 'Mon 9:00', text: 'New products for Belia Trading · 6 products · quotation attached' },
+          { k: 'reply', title: 'Reply from Sandra', time: 'Mon 11:20', quote: 'Hi Aman,\nThanks for this. Could you share your price for 1,000 units of the SJ-200, delivered to Callao? We would also like to see the CE certificate.\nBest, Sandra' },
+          { k: 'store', title: 'Stored', time: 'Mon 11:20', text: 'Reply and 1 file saved to Belia Trading\'s customer record.', files: ['Belia – volumes 2027.xlsx'] },
+          { k: 'intent', title: 'Intent: asking for a price', time: 'Mon 11:21', text: 'Wants 1,000 × Slow Juicer SJ-200, CIF Callao, and the CE certificate.' }
+        ] },
+      { id: 'baianao', company: 'Baianão', logo: 'b', logoBg: '#16A34A', people: 'To Marcos Lima · Buyer, small appliances', status: 'replied', intent: 'wrong', auto: 'wrong', unread: true, when: '10:05',
+        events: [
+          { k: 'sent', title: 'Sent', time: 'Mon 9:01', text: 'New products for Baianão · 6 products' },
+          { k: 'reply', title: 'Reply from Marcos', time: 'Mon 10:05', quote: 'Olá, I no longer handle kitchen appliances. Please contact Fernanda Alves, our head of purchasing: fernanda.alves@baianao.com.br' },
+          { k: 'store', title: 'Stored', time: 'Mon 10:05', text: 'New contact saved: Fernanda Alves · Head of purchasing.' },
+          { k: 'intent', title: 'Intent: wrong person', time: 'Mon 10:05', text: 'Referred you to Fernanda Alves.' }
+        ] },
+      { id: 'eletro', company: 'ELETROLAR', logo: 'E', logoBg: '#7C3AED', people: 'To Alicia Silva · CC Pedro Santos', status: 'sent', when: 'Mon 9:02',
+        events: [
+          { k: 'sent', title: 'Sent', time: 'Mon 9:02', text: 'New products for ELETROLAR · to Alicia, Pedro in CC' },
+          { k: 'wait', title: 'No reply yet', time: 'now', text: 'Follow-up goes out Thu 15 Oct · 9:00 if there is still no reply.' }
+        ] },
+      { id: 'global', company: 'Global Home Brasil', logo: 'G', logoBg: '#334155', people: 'To Rafael Costa · Purchasing Manager', status: 'replied', intent: 'ooo', auto: 'ooo', when: 'Mon 9:04',
+        events: [
+          { k: 'sent', title: 'Sent', time: 'Mon 9:03', text: 'New products for Global Home Brasil' },
+          { k: 'reply', title: 'Automatic reply', time: 'Mon 9:04', quote: 'I am out of the office until 20 October with limited access to email.' },
+          { k: 'intent', title: 'Intent: out of office', time: 'Mon 9:04', text: 'Follow-up moved to Wed 21 Oct · 9:00, the day after Rafael is back.' }
+        ] },
+      { id: 'compras', company: 'Global Home Brasil', logo: 'G', logoBg: '#334155', people: 'To compras@globalhomebrasil.com.br', status: 'bounced', when: 'Mon 9:05', badEmail: 'compras@globalhomebrasil.com.br',
+        events: [
+          { k: 'sent', title: 'Sent', time: 'Mon 9:05' },
+          { k: 'bounce', title: 'Bounced', time: 'Mon 9:05', text: 'The mail server says this address does not exist.' }
+        ] },
+      { id: 'mega', company: 'Mega Utilidades', logo: 'M', logoBg: '#111827', people: 'To Valentina Soto · Buyer', status: 'replied', intent: 'no', auto: 'no', when: 'Mon 14:40',
+        events: [
+          { k: 'sent', title: 'Sent', time: 'Mon 9:06' },
+          { k: 'reply', title: 'Reply from Valentina', time: 'Mon 14:40', quote: 'Thank you, but we are not adding new suppliers this year.' },
+          { k: 'intent', title: 'Intent: not interested', time: 'Mon 14:40', text: 'Follow-ups for Mega Utilidades were stopped.' }
+        ] },
+      { id: 'miobio', company: 'MioBio Chile SpA', logo: 'M', logoBg: '#E5484D', people: 'To Camila Rojas · Purchasing manager', status: 'scheduled', when: 'Tue 13 · 9:00',
+        events: [ { k: 'sched', title: 'Scheduled', time: 'Fri 9 Oct', text: 'Tue 13 Oct · 9:00 Santiago time' } ] },
+      { id: 'acqua', company: 'Acqualive', logo: 'A', logoBg: '#0E7490', people: 'To Bruno Teixeira · Import coordinator', status: 'scheduled', when: 'Tue 13 · 9:01',
+        events: [ { k: 'sched', title: 'Scheduled', time: 'Fri 9 Oct', text: 'Tue 13 Oct · 9:01 São Paulo time' } ] },
+      { id: 'casa', company: 'Casa dos Presentes Shop', logo: 'C', logoBg: '#1E3A8A', people: 'To Juliana Rocha · Store manager', status: 'paused', when: 'Wed 14 · 9:00',
+        events: [ { k: 'sched', title: 'Scheduled', time: 'Fri 9 Oct', text: 'Wed 14 Oct · 9:00 São Paulo time' }, { k: 'pause', title: 'Paused by you', time: 'Sat 10 Oct' } ] }
+    ];
+  }
+
+  setRow(id, patch, ev) {
+    const rows = this.state.rows.map((r) => (r.id === id ? Object.assign({}, r, patch, ev ? { events: r.events.concat([ev]) } : {}) : r));
+    this.setState({ rows: rows });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const ST = {
+      scheduled: { t: 'Scheduled', c: '#1D5BD8', dot: '#1D5BD8', bg: '#EEF3FD' },
+      sent: { t: 'Sent', c: '#475569', dot: '#94A3B8', bg: '#F1F4F8' },
+      replied: { t: 'Replied', c: '#15803D', dot: '#16A34A', bg: '#ECFDF3' },
+      bounced: { t: 'Bounced', c: '#B45309', dot: '#F59E0B', bg: '#FFF4E5' },
+      paused: { t: 'Paused', c: '#64748B', dot: '#CBD5E1', bg: '#F1F4F8' },
+      skipped: { t: 'Skipped', c: '#94A3B8', dot: '#E2E8F0', bg: '#F8FAFC' }
+    };
+    const IN = {
+      price: { t: 'Asking for a price', bg: '#EAF1FE', c: '#1D4ED8', good: true },
+      interested: { t: 'Interested', bg: '#ECFDF3', c: '#15803D', good: true },
+      samples: { t: 'Wants samples', bg: '#E6F6F3', c: '#0F766E', good: true },
+      wrong: { t: 'Wrong person', bg: '#F3EEFF', c: '#6D28D9', good: true },
+      ooo: { t: 'Out of office', bg: '#F1F4F8', c: '#475569' },
+      later: { t: 'Not now', bg: '#FFF7E8', c: '#92400E' },
+      no: { t: 'Not interested', bg: '#FDF0F0', c: '#B42318' }
+    };
+    const EV = {
+      sched: { icon: 'M21 12a9 9 0 1 1-18 0a9 9 0 1 1 18 0M12 7v5l3 2', bg: '#EEF3FD', c: '#1D5BD8' },
+      sent: { icon: 'M21.5 2.5L10.8 13.2M21.5 2.5l-7 19-3.7-8.3-8.3-3.7z', bg: '#F1F4F8', c: '#475569' },
+      reply: { icon: 'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 5 5v6', bg: '#ECFDF3', c: '#15803D' },
+      store: { icon: 'M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 7v10c0 1.7 3.6 3 8 3s8-1.3 8-3V7M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3', bg: '#F5F3FF', c: '#6D28D9' },
+      intent: { icon: 'M12 3l2.2 5.5L20 9l-4.5 3.8L17 19l-5-3.2L7 19l1.5-6.2L4 9l5.8-.5z', bg: '#FFF7E8', c: '#B45309' },
+      wait: { icon: 'M12 6v6l4 2', bg: '#F8FAFC', c: '#94A3B8' },
+      bounce: { icon: 'M12 3l10 18H2zM12 10v5M12 18h.01', bg: '#FFF4E5', c: '#B45309' },
+      pause: { icon: 'M8 5v14M16 5v14', bg: '#F1F4F8', c: '#64748B' },
+      you: { icon: 'M21.5 2.5L10.8 13.2M21.5 2.5l-7 19-3.7-8.3-8.3-3.7z', bg: '#EAF1FE', c: '#1D5BD8' }
+    };
+    const needs = (r) => (r.status === 'replied' && r.intent && IN[r.intent].good && !r.done) || r.status === 'bounced';
+    const rowsAll = s.rows;
+    const count = (f) => rowsAll.filter(f).length;
+    const FILTERS = [
+      { k: 'all', label: 'All', f: () => true, dot: '#CBD5E1' },
+      { k: 'action', label: 'Needs you', f: needs, dot: '#1D5BD8' },
+      { k: 'scheduled', label: 'Scheduled', f: (r) => r.status === 'scheduled' || r.status === 'paused', dot: '#93C5FD' },
+      { k: 'sent', label: 'Sent · waiting', f: (r) => r.status === 'sent', dot: '#94A3B8' },
+      { k: 'replied', label: 'Replied', f: (r) => r.status === 'replied', dot: '#16A34A' },
+      { k: 'bounced', label: 'Bounced', f: (r) => r.status === 'bounced', dot: '#F59E0B' }
+    ];
+    const flt = FILTERS.find((x) => x.k === s.filter) || FILTERS[0];
+    const list = rowsAll.filter(flt.f);
+    const sel = rowsAll.find((r) => r.id === s.sel) || rowsAll[0];
+    const st = ST[sel.status];
+    const nSched = count((r) => r.status === 'scheduled');
+    const dIntent = sel.intent ? IN[sel.intent] : null;
+
+    // suggested next step per situation
+    const nextOf = (r) => {
+      if (r.done) return null;
+      if (r.status === 'replied' && r.intent === 'price') return { title: 'Send a quotation for 1,000 × Slow Juicer SJ-200', sub: 'CIF Callao · $41.80 per unit · CE certificate attached', label: 'Draft reply', draft: 'Hi Sandra,\n\nThank you for your interest. For 1,000 units of the Slow Juicer SJ-200 delivered CIF Callao, our price is $41.80 per unit. I have attached the quotation and the CE certificate.\n\nBest regards,\nAman', file: 'Quotation – Belia Trading.pdf' };
+      if (r.status === 'replied' && r.intent === 'wrong') return { title: 'Email Fernanda Alves instead', sub: 'Same email, addressed to the new contact Marcos named', label: 'Send to Fernanda', send: true };
+      if (r.status === 'replied' && (r.intent === 'interested' || r.intent === 'samples')) return { title: r.intent === 'samples' ? 'Offer samples' : 'Reply while they are interested', sub: 'A short reply with next steps', label: 'Draft reply', draft: 'Hi,\n\nThank you for getting back to me. ' + (r.intent === 'samples' ? 'We can send samples this week — could you confirm the delivery address?' : 'Would a short call this week work to go through prices and lead times?') + '\n\nBest regards,\nAman' };
+      return null;
+    };
+    const nx = nextOf(sel);
+    const act = (label, icon, run, color) => ({ label: label, icon: icon, run: run, color: color || '#0F172A' });
+    const I = { send: 'M21.5 2.5L10.8 13.2M21.5 2.5l-7 19-3.7-8.3-8.3-3.7z', cal: 'M4 5h16v15H4zM4 10h16M9 3v4M15 3v4', edit: 'M4 20h4L19 9l-4-4L4 16zM14 6l4 4', pause: 'M8 5v14M16 5v14', play: 'M7 4l13 8-13 8z', skip: 'M5 5l14 14M19 5L5 19', reply: 'M9 14L4 9l5-5M4 9h11a5 5 0 0 1 5 5v6', fol: 'M21 12a9 9 0 1 1-18 0a9 9 0 1 1 18 0M12 7v5l3 2', view: 'M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12zM15 12a3 3 0 1 1-6 0a3 3 0 1 1 6 0', open: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5' };
+    const id = sel.id;
+    const actions = (() => {
+      if (sel.status === 'scheduled') return [
+        act('Send now', I.send, () => this.setRow(id, { status: 'sent', when: 'just now' }, { k: 'sent', title: 'Sent', time: 'just now', text: 'Sent early by you' })),
+        act('Reschedule', I.cal, () => {}), act('Edit email', I.edit, () => {}),
+        act('Pause', I.pause, () => this.setRow(id, { status: 'paused' }, { k: 'pause', title: 'Paused by you', time: 'just now' })),
+        act('Skip', I.skip, () => this.setRow(id, { status: 'skipped' }, { k: 'pause', title: 'Skipped · will not be sent', time: 'just now' }), '#B42318')];
+      if (sel.status === 'paused') return [
+        act('Resume', I.play, () => this.setRow(id, { status: 'scheduled' }, { k: 'sched', title: 'Resumed', time: 'just now', text: 'Back on its original slot' })),
+        act('Reschedule', I.cal, () => {}), act('Edit email', I.edit, () => {}),
+        act('Skip', I.skip, () => this.setRow(id, { status: 'skipped' }, { k: 'pause', title: 'Skipped · will not be sent', time: 'just now' }), '#B42318')];
+      if (sel.status === 'sent') return [act('View email', I.view, () => {}), act('Change follow-up', I.fol, () => {}), act('Stop follow-ups', I.skip, () => this.setRow(id, {}, { k: 'pause', title: 'Follow-ups stopped by you', time: 'just now' }))];
+      if (sel.status === 'replied') return [act('Reply', I.reply, () => this.setState({ composing: id, draft: '' })), act('View email', I.view, () => {}), act('Open customer record', I.open, () => {})];
+      if (sel.status === 'skipped') return [act('Put back', I.play, () => this.setRow(id, { status: 'scheduled' }, { k: 'sched', title: 'Put back on schedule', time: 'just now' }))];
+      return [act('View email', I.view, () => {})];
+    })();
+
+    return {
+      headline: s.paused ? 'Outreach is paused.' : 'Your outreach is running.',
+      subline: s.paused ? 'Nothing will be sent until you resume. Replies still come in.' : 'I send, collect replies, file them and read what each customer wants. You only step in when needed.',
+      running: !s.paused, paused: s.paused,
+      stateText: s.paused ? 'Paused' : 'Running', stateBg: s.paused ? '#F1F4F8' : '#ECFDF3', stateC: s.paused ? '#475569' : '#15803D',
+      pauseLabel: s.paused ? 'Resume all' : 'Pause all', pauseIcon: s.paused ? 'M7 4l13 8-13 8z' : 'M6 4h4v16H6zM14 4h4v16h-4z',
+      togglePause: () => {
+        const p = !s.paused;
+        const rows = s.rows.map((r) => (p && r.status === 'scheduled' ? Object.assign({}, r, { status: 'paused', byAll: true }) : !p && r.status === 'paused' && r.byAll ? Object.assign({}, r, { status: 'scheduled', byAll: false }) : r));
+        this.setState({ paused: p, rows: rows });
+      },
+      noop: () => {},
+      menuOpen: s.menuOpen, menuExpanded: s.menuOpen ? 'true' : 'false',
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen }), closeMenu: () => this.setState({ menuOpen: false }),
+      menu: [
+        { label: 'See all scheduled emails', icon: I.cal, color: '#0F172A', run: () => this.setState({ menuOpen: false }) },
+        { label: 'Add recipients', icon: 'M12 5v14M5 12h14', color: '#0F172A', run: () => this.setState({ menuOpen: false }) },
+        { label: 'Export activity', icon: 'M12 3v12M7 10l5 5 5-5M5 21h14', color: '#0F172A', run: () => this.setState({ menuOpen: false }) },
+        { label: 'Cancel ' + nSched + ' unsent emails', icon: I.skip, color: '#B42318', run: () => this.setState({ menuOpen: false, rows: s.rows.map((r) => (r.status === 'scheduled' || r.status === 'paused' ? Object.assign({}, r, { status: 'skipped' }) : r)) }) }
+      ],
+      stages: FILTERS.map((x) => { const on = x.k === flt.k; return { label: x.label, n: String(count(x.f)), dot: x.dot, on: on ? 'true' : 'false', bg: on ? '#F5F8FE' : '#FFFFFF', border: on ? '#9DB6EE' : '#E8ECF3', labelC: on ? '#1D5BD8' : '#64748B', pick: () => this.setState({ filter: x.k }) }; }),
+      rows: list.map((r) => { const t = ST[r.status]; const on = r.id === sel.id; const ii = r.status === 'replied' && r.intent ? IN[r.intent] : null;
+        return { company: r.company, logo: r.logo, logoBg: r.logoBg, when: r.when, unread: !!r.unread, weight: r.unread ? 700 : 600,
+          stText: t.t, stC: t.c, stDot: t.dot, hasIntent: !!ii, intent: ii ? ii.t : '', inBg: ii ? ii.bg : '', inC: ii ? ii.c : '',
+          selected: on ? 'true' : 'false', bg: on ? '#F5F8FE' : 'transparent', ring: on ? 'inset 0 0 0 1px #C9D8F7' : 'none', op: r.status === 'skipped' ? 0.5 : 1,
+          pick: () => { this.setState({ sel: r.id, composing: '' }); if (r.unread) this.setRow(r.id, { unread: false }); } }; }),
+      noRows: !list.length,
+      d: {
+        company: sel.company, people: sel.people, stText: st.t, stC: st.c, stDot: st.dot, stBg: st.bg,
+        hasReply: sel.status === 'replied',
+        intentSource: sel.intent && sel.intent === sel.auto ? '· read by Deep Bridge · click to correct' : '· set by you',
+        intents: Object.keys(IN).map((k) => { const on = sel.intent === k; const x = IN[k]; return { label: x.t, on: on ? 'true' : 'false', bg: on ? x.bg : '#FFFFFF', c: on ? x.c : '#64748B', border: on ? x.bg : '#E2E8F0', pick: () => this.setRow(id, { intent: k }) }; }),
+        hasNext: !!nx && s.composing !== id, nextTitle: nx ? nx.title : '', nextSub: nx ? nx.sub : '', nextLabel: nx ? nx.label : '',
+        nextRun: () => { if (!nx) return; if (nx.send) { this.setRow(id, { done: true }, { k: 'you', title: 'Sent to Fernanda Alves', time: 'just now', text: 'fernanda.alves@baianao.com.br · same email, new greeting' }); return; } this.setState({ composing: id, draft: nx.draft || '' }); },
+        composing: s.composing === id, replyTo: sel.people.replace(/^To /, '').split(' · ')[0], draft: s.draft,
+        hasDraftFile: !!(nx && nx.file) && s.composing === id, draftFile: nx && nx.file ? nx.file : '',
+        onDraft: (ev) => this.setState({ draft: ev.target.value }),
+        cancelDraft: () => this.setState({ composing: '' }),
+        sendDraft: () => { this.setState({ composing: '' }); this.setRow(id, { done: true }, { k: 'you', title: 'You replied', time: 'just now', quote: s.draft, files: nx && nx.file ? [nx.file] : undefined }); },
+        bounced: sel.status === 'bounced', badEmail: sel.badEmail || '', fixVal: s.fix[id] || '',
+        onFix: (ev) => { const f = Object.assign({}, s.fix); f[id] = ev.target.value; this.setState({ fix: f }); },
+        resend: () => { const v = (s.fix[id] || '').trim(); if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return; this.setRow(id, { status: 'sent', people: 'To ' + v, when: 'just now' }, { k: 'sent', title: 'Resent to the corrected address', time: 'just now', text: v }); },
+        events: sel.events.map((e, i) => { const x = EV[e.k] || EV.sent; return { title: e.title, time: e.time, bg: x.bg, c: x.c, icon: x.icon, line: i < sel.events.length - 1,
+          hasText: !!e.text, text: e.text || '', hasQuote: !!e.quote, quote: e.quote || '', hasFiles: !!(e.files && e.files.length), files: e.files || [] }; }),
+        actions: actions
+      },
+      rules: [['stopReply', 'Stop follow-ups when they reply'], ['stopCompany', 'Stop for the whole company if anyone replies'], ['bounce', 'Pause everything if 3+ emails bounce']].map((x) => { const on = !!s.rules[x[0]];
+        return { label: x[1], on: on ? 'true' : 'false', track: on ? '#2B4FD8' : '#E2E8F0', justify: on ? 'flex-end' : 'flex-start', toggle: () => { const r = Object.assign({}, s.rules); r[x[0]] = !on; this.setState({ rules: r }); } }; }),
+      footNote: count((r) => r.status === 'replied') + ' replies · last checked just now'
+    };
+  }
+}
+</script>
+</body>
+</html>
